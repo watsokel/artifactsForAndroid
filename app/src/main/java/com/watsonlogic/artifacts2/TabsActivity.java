@@ -153,74 +153,6 @@ public class TabsActivity extends AppCompatActivity implements LocationListener 
     }
 
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment implements LocationListener {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-        private static final String TAG = "PlaceholderFragment";
-        TextView tv;
-        LocationManager locMgr;
-        Location loc;
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            tv = (TextView) rootView.findViewById(R.id.tv);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            try {
-                locMgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                tv.append("requesting Location Updates\n");
-                //locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 125L, 0.05f, (LocationListener) this);
-                locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-            return rootView;
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            Log.d(TAG, "location changed");
-            tv.append(location.getLatitude() + "," + location.getLongitude() + "\n");
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -236,7 +168,21 @@ public class TabsActivity extends AppCompatActivity implements LocationListener 
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            Fragment f = null;
+            switch(position){
+                case 0:
+                    f = LocationFragment.newInstance(position+1);
+                    break;
+                case 1:
+                    f = LeaveArtifactFragment.newInstance(position+1);
+                    break;
+                case 2:
+                    f = ProfileFragment.newInstance(position+1);
+                    break;
+                default:
+                    f = LocationFragment.newInstance(position+1);
+            }
+            return f;
         }
 
         @Override
